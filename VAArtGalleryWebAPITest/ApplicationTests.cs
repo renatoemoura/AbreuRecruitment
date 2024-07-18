@@ -8,7 +8,7 @@ namespace VAArGalleryWebAPITest
     public class Tests
     {
         ArtGallery g1 = new ArtGallery("Gallery One", "Beja", "Baltazar Braz");
-        ArtGallery g2 = new ArtGallery("Gallery Two", "Bragança", "Bernardo Beltrão");
+        ArtGallery g2 = new ArtGallery("Gallery Two", "Braganï¿½a", "Bernardo Beltrï¿½o");
         ArtWork a1 = new ArtWork("obra 1", "artista 1", 1900, 1000);
         ArtWork a2 = new ArtWork("obra 2", "artista 1", 1910, 1500);
         ArtWork a3 = new ArtWork("obra 3", "artista 2", 1920, 2000);
@@ -48,6 +48,22 @@ namespace VAArGalleryWebAPITest
             Assert.That(r, Is.Not.Null);
             Assert.That(r.Count(), Is.EqualTo(2));
             Assert.That(r.First(), Is.EqualTo(a1));
+        }
+
+        [Test]
+        public async Task Test_Remove_an_existing_gallery()
+        {
+            var existingGuid = Guid.Parse("7af0ed23-36c1-4097-bae4-525da3b129ce");
+            var r = await new DeleteArtGalleryQueryHandler(NormalArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(existingGuid, CandellationToken.None));
+            
+            Assert.That(r, Is.Not.Null);
+        }
+        [Test]
+        public async Task Test_Remove_a_not_existing_gallery()
+        {
+            var r = await new DeleteArtGalleryQueryHandler(NormalArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(new Guid.NewGuid(), CandellationToken.None));
+            
+            Assert.That(r, Is.Null);
         }
 
 
