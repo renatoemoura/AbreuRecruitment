@@ -4,7 +4,7 @@ using VAArtGalleryWebAPI.Domain.Interfaces;
 
 namespace VAArtGalleryWebAPI.Application.Queries
 {
-    public class DeleteArtGalleriesQueryHandler(IArtGalleryRepository artGalleryRepository) : IRequestHandler<DeleteArtGalleryQuery, ArtGallery?>
+    public class DeleteArtGalleryQueryHandler(IArtGalleryRepository artGalleryRepository) : IRequestHandler<DeleteArtGalleryQuery, ArtGallery?>
     {
         public async Task<ArtGallery?> Handle(DeleteArtGalleryQuery request, CancellationToken cancellationToken)
         {
