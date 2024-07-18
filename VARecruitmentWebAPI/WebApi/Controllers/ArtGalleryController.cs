@@ -24,5 +24,24 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Alguém vai ter de o implementar :)");
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var gallery = await mediator.Send(new DeleteArtGalleryQuery(id));
+
+                if (gallery == null)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent, "Sem conteudo para apagar.");
+                }
+            return StatusCode(StatusCodes.Status200OK, "Registro Apagado com sucesso.");
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro apagando o registro.");
+            }
+        }
     }
 }
