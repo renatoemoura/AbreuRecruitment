@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using System.Reflection.Metadata.Ecma335;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using VAArtGalleryWebAPI.Application.Queries;
+using VAArtGalleryWebAPI.Domain.Entities;
 using VAArtGalleryWebAPI.WebApi.Models;
 
 namespace VAArtGalleryWebAPI.WebApi.Controllers
@@ -8,7 +10,7 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
     [Route("api/art-galleries")]
     [ApiController]
     public class ArtGalleryController(IMediator mediator) : ControllerBase
-    {
+    {        
         [HttpGet]
         public async Task<ActionResult<List<GetAllArtGalleriesResult>>> GetAllGalleries()
         {
@@ -22,7 +24,18 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<CreateArtGalleryResult>> Create([FromBody] CreateArtGalleryRequest request)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Alguém vai ter de o implementar :)");
+            try
+            {
+                var newGallery = new ArtGallery(request.Name, request.City, request.Manager);
+                var gallery = await mediator.Send(new CreateArtGalleryQuery(newGallery));
+
+                return StatusCode(StatusCodes.Status201Created, gallery);
+            }
+            catch (System.Exception)
+            {
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro tentando Criar um novo registro");
+            }
         }
 
         [HttpDelete("{id}")]
@@ -36,7 +49,7 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status204NoContent, "Sem conteudo para apagar.");
                 }
-            return StatusCode(StatusCodes.Status200OK, "Registro Apagado com sucesso.");
+            return StatusCode(StatusCodes.Status200OK, gallery);
             }
             catch (System.Exception)
             {
