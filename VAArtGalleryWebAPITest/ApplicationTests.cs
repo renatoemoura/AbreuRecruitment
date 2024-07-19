@@ -53,15 +53,14 @@ namespace VAArGalleryWebAPITest
         [Test]
         public async Task Test_Remove_an_existing_gallery()
         {
-            var existingGuid = Guid.Parse("7af0ed23-36c1-4097-bae4-525da3b129ce");
-            var r = await new DeleteArtGalleryQueryHandler(NormalArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(existingGuid, CandellationToken.None));
+            var r = await new DeleteArtGalleryQueryHandler(NormalDeleteArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(Guid.NewGuid()), CancellationToken.None);
             
             Assert.That(r, Is.Not.Null);
         }
         [Test]
         public async Task Test_Remove_a_not_existing_gallery()
         {
-            var r = await new DeleteArtGalleryQueryHandler(NormalArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(new Guid.NewGuid(), CandellationToken.None));
+            var r = await new DeleteArtGalleryQueryHandler(InvalidDeleteArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(Guid.NewGuid()), CancellationToken.None);
             
             Assert.That(r, Is.Null);
         }
@@ -105,6 +104,19 @@ namespace VAArGalleryWebAPITest
 
             return mock;
         }
+        private Mock<IArtGalleryRepository> NormalDeleteArtGalleryRepositoryMock()
+        {
+            var mock = new Mock<IArtGalleryRepository>(MockBehavior.Strict);
+            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(g1);
 
+            return mock;
+        }
+        private Mock<IArtGalleryRepository> InvalidDeleteArtGalleryRepositoryMock()
+        {
+            var mock = new Mock<IArtGalleryRepository>(MockBehavior.Strict);
+            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(value: null);
+
+            return mock;
+        }
     }
 }
