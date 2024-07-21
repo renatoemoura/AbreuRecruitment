@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using VAArtGalleryWebAPI.Application.Queries;
 using VAArtGalleryWebAPI.Domain.Entities;
@@ -21,6 +20,16 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetAllArtGalleriesResult>> GetGalleryById(Guid id)
+        {
+            var galleries = await mediator.Send(new GetAllArtGalleriesQuery());
+
+            var result = galleries.FirstOrDefault(g => g.Id == id);
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult<CreateArtGalleryResult>> Create([FromBody] CreateArtGalleryRequest request)
         {
@@ -38,6 +47,26 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<ActionResult<EditArtGalleryResult>> EditArtGallery([FromBody] EditArtGalleryRequest request)
+        {
+            try
+            {
+                var newGallery = new ArtGallery(request.Name, request.City, request.Manager)
+                {
+                    Id = Guid.Parse(request.Id)
+                };
+                var gallery = await mediator.Send(new EditArtGalleryQuery(newGallery));
+
+                return StatusCode(StatusCodes.Status201Created, gallery);
+            }
+            catch (System.Exception)
+            {
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro tentando Criar um novo registro");
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
@@ -45,7 +74,7 @@ namespace VAArtGalleryWebAPI.WebApi.Controllers
             {
                 var gallery = await mediator.Send(new DeleteArtGalleryQuery(id));
 
-                if (gallery == null)
+                if (!gallery)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, "Sem conteudo para apagar.");
                 }

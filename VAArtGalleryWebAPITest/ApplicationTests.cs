@@ -55,14 +55,14 @@ namespace VAArGalleryWebAPITest
         {
             var r = await new DeleteArtGalleryQueryHandler(NormalDeleteArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(Guid.NewGuid()), CancellationToken.None);
             
-            Assert.That(r, Is.Not.Null);
+            Assert.That(r, Is.Not.False);
         }
         [Test]
         public async Task Test_Remove_a_not_existing_gallery()
         {
             var r = await new DeleteArtGalleryQueryHandler(InvalidDeleteArtGalleryRepositoryMock().Object).Handle(new DeleteArtGalleryQuery(Guid.NewGuid()), CancellationToken.None);
             
-            Assert.That(r, Is.Null);
+            Assert.That(r, Is.False);
         }
 
 
@@ -107,14 +107,14 @@ namespace VAArGalleryWebAPITest
         private Mock<IArtGalleryRepository> NormalDeleteArtGalleryRepositoryMock()
         {
             var mock = new Mock<IArtGalleryRepository>(MockBehavior.Strict);
-            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(g1);
+            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
             return mock;
         }
         private Mock<IArtGalleryRepository> InvalidDeleteArtGalleryRepositoryMock()
         {
             var mock = new Mock<IArtGalleryRepository>(MockBehavior.Strict);
-            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(value: null);
+            mock.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
             return mock;
         }

@@ -1,0 +1,47 @@
+<div>
+    <h1>
+        <a mat-fab extended routerLink="/art-galleries"><mat-icon class="icon-back" aria-hidden="false" aria-label="galleries list" fontIcon="navigate_before"></mat-icon></a>
+        Galeria {{gallery.name}}
+    </h1>
+    <h3>
+        Manager: {{gallery.manager}} <br />
+        Localizada em {{gallery.city}}
+    </h3>
+    
+    <table mat-table [dataSource]="artWorks">
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let artWork"> {{artWork.name}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Autor </th>
+        <td mat-cell *matCellDef="let artWork"> {{artWork.author}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="creationYear">
+        <th mat-header-cell *matHeaderCellDef> Ano de Criação </th>
+        <td mat-cell *matCellDef="let artWork"> {{artWork.creationYear}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="askPrice">
+        <th mat-header-cell *matHeaderCellDef> Preço </th>
+        <td mat-cell *matCellDef="let artWork"> {{artWork.askPrice | currency:'EUR':'code':'6.3-3':'fr'}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let artWork">
+          <span>
+            <!--<mat-icon aria-hidden="false" aria-label="edit" fontIcon="edit" (click)="editArtWorkClick(artWork.id)"></mat-icon>-->
+            <mat-icon aria-hidden="false" aria-label="delete" fontIcon="delete_forever" (click)="deleteArtWork(artWork.id)"></mat-icon>
+          </span>
+        </td>
+      </ng-container>
+  
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>

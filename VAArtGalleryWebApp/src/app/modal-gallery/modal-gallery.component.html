@@ -1,0 +1,30 @@
+<ng-container *ngIf="id; then galleryEdit; else galleryNew">
+    
+</ng-container>
+<ng-template #galleryNew>
+    <h2 mat-dialog-title>Nova Galeria</h2>
+</ng-template>
+<ng-template #galleryEdit>
+    <h2 mat-dialog-title>{{name}}</h2>
+</ng-template>
+<mat-dialog-content>
+    <mat-form-field [hidden]="true">
+        <input matInput [(ngModel)]="id" />
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Nome:</mat-label>
+        <input matInput [(ngModel)]="name"/>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Cidade:</mat-label>
+        <input matInput [(ngModel)]="city"/>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Gestor:</mat-label>
+        <input matInput [(ngModel)]="manager"/>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="addGallery(id, name, city, manager)" cdkFocusInitial>Confirmar</button>
+</mat-dialog-actions>
